@@ -77,11 +77,15 @@ internal class ChatClientImpl(
                 is DisconnectedEvent -> {
                     state.socketConnected = false
                 }
+                is UserUpdated -> {
+                    if(isSelfUpdate(state.user, event.user))
+                        state.user = event.user
+                    }
+                }
             }
         }
 
-        logger.logI("Initialised: " + getVersion())
-    }
+    private fun isSelfUpdate(user: User?, updatedUser: User?) = user != null && updatedUser != null && user.id == updatedUser.id
 
     //region Set user
 
